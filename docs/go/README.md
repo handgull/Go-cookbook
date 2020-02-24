@@ -29,7 +29,11 @@ go help # Panoramica della CLI per altri comandi
 > Il comando `go fmt` formatta auomaticamente ogni file nella directory! (usato automaticamente ad ogni salvataggio dalle estensioni di [VS code](https://code.visualstudio.com/))
 
 ## Go packages
-Un package, in golang, è una **collezione di codice** sorgente e può avere al suo interno il sorgente di molti files.
+Un package, in golang, è una **collezione di codice** sorgente e può avere al suo interno il sorgente di molti files.<br>
 L'appartenenza ad un package DEVE essere specificata nella prima riga di ogni file.
 
 ![go-diagrams-01](./assets/go-diagrams-01.png)
+
+::: tip
+Per creare un eseguibile tramite `go build` è necessario che il package si chiami `main`, altrimenti non vi sarà un file binario risultante! (invece `go run` esegue normalmente il sorgente)
+:::
