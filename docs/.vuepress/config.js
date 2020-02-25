@@ -12,7 +12,7 @@ module.exports = {
       { text: 'Go', link: '/go/' }
     ],
     sidebar: {
-      '/git/': getGoSidebar('Go')
+      '/go/': getGoSidebar('Go')
     },
     smoothScroll: true
   },
