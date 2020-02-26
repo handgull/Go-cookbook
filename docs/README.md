@@ -14,4 +14,7 @@ Fonti:<br>
 - [Is Go object oriented? - flaviocopes](https://flaviocopes.com/golang-is-go-object-oriented/)
 
 Approfondimenti:<br>
+- [Golang Tour](https://tour.golang.org)
+- [Golang effective_go](https://golang.org/doc/effective_go.html)
+- [gobyexample](http://gobyexample.com)
 - [The pros and cons of programming in Go - willowtree](https://willowtreeapps.com/ideas/the-pros-and-cons-of-programming-in-go)

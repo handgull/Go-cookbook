@@ -1,4 +1,8 @@
 # Hello Golang
+::: warning
+I seguenti sono semplici appunti e non una soluzione completa di risorse, nella home sono presenti vari **approfondimenti**.<br>
+Consiglio di guardare soprattutto il [Tour](https://tour.golang.org) di Go e successivamente [Golang effective_go](https://golang.org/doc/effective_go.html) e [gobyexample](http://gobyexample.com) per approfondire!
+:::
 Eseguiamo il nostro primo programma:
 ```go
 package main // Specifico a quale package appartiene il sorgente (un package eseguibile in questo caso)
@@ -72,8 +76,14 @@ Go ci fornisce due tipi di strutture:
 ```go
 animals := []string{"dog", "cat"} // Esempio di Slice
 animals = append(animals, "bird") // Aggiunta di un elemento allo Slice
+animals[1] // "cat"
+// COOL STUFF:
+animals[0:2] // sottosequenza specificando un range {"dog, "cat"}
+animals[:2] // sottosequenza che parte dal primo elemento (equivalente a sopra)
+animals[1:] // sottosequenza che parte dal secondo elemento fino all'ultimo {"cat", "bird"}
+// NOTA: l'index finale non è incluso
 ```
-> Ogni elemento deve essere dello **stesso tipo**, questo vale per entrambe le strutture
+> Ogni elemento deve essere dello **stesso tipo**, e gli indici partono da 0 :ok_hand:. Questo vale per entrambe le strutture
 
 ## Iterazioni e cicli
 ```go
@@ -88,6 +98,17 @@ for i, animal := range animals { // Come si usa ultimamente la sintassi del for 
 L'esempio di codice riportato nell'immagine non compilerebbe perchè `index` è una variabile che **non è usata** e go **non fa compilare!**<br>
 Se non si ha intenzione di usare l'indice dell'elemento all'interno del ciclo va quindi tolta la variabile index.
 :::
+
+## Valori di ritorno multipli
+In go è possibile far tornare alle funzioni più di un valore:
+```go
+func f1() (int, string) { // Valore di ritorno multiplo!
+	return 42, "42"
+}
+
+numberVar, stringVar := f1()
+// numberVar = 42; stringVar = "42"
+```
 
 ## Hello Golang: esercitazione
 
@@ -108,6 +129,6 @@ Una funzione con un receiver appartiene ad un **istanza** del tipo del receiver.
 
 ![golang-diagrams-08](./assets/golang-diagrams-08.png)
 
-> Per esempi pratici sull'**implementazione** dei **custom types** basta guardare il codice dell'esercitazione linkata [sopra](./#hello-golang-esercitazione) (sono trattate anche altre cose di un certo rilievo, come i test)
+> Per altri esempi pratici sull'**implementazione** dei **custom types** basta guardare il codice dell'esercitazione linkata [sopra](./#hello-golang-esercitazione) (sono trattate anche altre cose di un certo rilievo, come i valori di ritorno multipli o i test)
 
 ![golang-diagrams-09](./assets/golang-diagrams-09.png)

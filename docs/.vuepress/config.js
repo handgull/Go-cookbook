@@ -35,7 +35,8 @@ function getGoSidebar (groupA) {
       collapsable: false,
       sidebarDepth: 2,
       children: [
-        ''
+        '',
+        './structs/'
       ]
     }
   ]
