@@ -152,6 +152,6 @@ Una stringa può essere convertita in uno Slice di byte usando il **codice ascii
 
 ![golang-diagrams-10](./assets/golang-diagrams-10.png)
 
-> Se non si agisce come mostrato nell'esercitazione e nella [doc](https://golang.org/pkg/math/rand/#NewSource) di Go i numeri casuali potrebbero essere sempre uguali ad ogni esecuzione, dato che il **seed** non cambia mai:
+> Se non si agisce come mostrato nell'esercitazione e nella [doc](https://golang.org/pkg/math/rand/#Seed) di Go i numeri casuali saranno sempre uguali ad ogni esecuzione, dato che l'ambiente in cui questi programmi sono eseguiti è deterministico ed il **seed** non cambia mai:
 
 ![golang-diagrams-11](./assets/golang-diagrams-11.png)

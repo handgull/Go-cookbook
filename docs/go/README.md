@@ -25,7 +25,11 @@ Go ha una [tipizzazione forte e statica](https://it.wikipedia.org/wiki/Tipizzazi
 ::: tip
 L'operatore `:=` è usato solo nell'assegnamento di **nuove variabili**.<br>
 
-Inoltre non è possibile inizializzare variabili fuori dal corpo di una funzione (es. `counter := 10` deve essere fatto dentro una **func**; `var counter int` ovvero un'inizializzazione può essere invece fatta anche fuori da una funzione)
+Al di fuori di una funzione però, ogni istruzione comincia con una parola chiave:<br>
+(**var**, **func**, e cosí via) e quindi il costrutto `:=` non è disponibile.<br>
+(e.g. `counter := 10` deve essere fatto dentro una **func**)<br>
+un inizializzazione con `var` invece può essere fatta anche fuori da una funzione<br>
+(e.g. `var i, j int = 1, 2`)
 :::
 ```sh
 # METODO 1
@@ -46,7 +50,37 @@ go help # Panoramica della CLI per altri comandi
 
 > Il comando `go fmt` formatta auomaticamente ogni file nella directory! (usato automaticamente ad ogni salvataggio dalle estensioni di [VS code](https://code.visualstudio.com/))
 
+## Valori 0
+Variabili dichiarate senza un valore **iniziale** esplicito vengono inizializzate con il loro **valore zero**.<br>
+
+Il valore zero è:
+- `0` per tipi **numerici**.
+- `false` per i **boolean**.
+- `""` (stringa vuota) per le **stringhe**.
+
+## Le costanti
+Le costanti sono dichiarate come **variabili**, ma con la parola chiave `const`.<br>
+Le costanti non possono essere dichiarate con la sintassi `:=`.
+```go
+const Pi = 3.14
+```
+
+## Some sugar
+```go
+func add(x, y int) int { // Se nella dichiarazione di una funzione i parametri sono dello stesso tipo posso specificarlo 1 volta sola
+	return x + y
+}
+
+// Valore di ritorno "naked"
+func split(sum int) (x, y int) {
+	x = sum * 4 / 9
+	y = sum - x
+	return // Se non specifico una return ritorna i valori di x e y, come specificato nella dichiarazione
+}
+```
+
 ## Go packages
+Ogni programma Go è composto di packages.<br>
 Un package, in golang, è una **collezione di codice** sorgente e può avere al suo interno il sorgente di molti files.<br>
 L'appartenenza ad un package DEVE essere specificata nella prima riga di ogni file.
 
@@ -59,6 +93,10 @@ Invece per avere package **riusabili** va scelto un nome diverso da `main`
 
 ![golang-diagrams-02](./assets/golang-diagrams-02.png)
 
+### Nomi pubblici
+In Go, un attributo/metodo è pubblico (esportato) se comincia con una lettera maiuscola.<br>
+`math.pi` -> errore `math.Pi` -> OK
+
 ### Import statements
 Le import **rendono disponibili package riusabili** al package corrente.
 ::: tip
@@ -69,10 +107,10 @@ Documentazione degli standard library packages di go [golang.org/pkg](https://go
 
 ![golang-diagrams-03](./assets/golang-diagrams-03.png)
 
-## Gestire liste di elementi in go
+## Array e Slice
 Go ci fornisce due tipi di strutture:
 1. Gli **Array**, di lunghezza **fissa**
-2. Gli **Slice**. di lughezza **variabile** (la lunghezza può aumentare o diminuire)
+2. Gli **Slice**, di lughezza **variabile** (la lunghezza può aumentare o diminuire)
 ```go
 animals := []string{"dog", "cat"} // Esempio di Slice
 animals = append(animals, "bird") // Aggiunta di un elemento allo Slice
@@ -86,10 +124,33 @@ animals[1:] // sottosequenza che parte dal secondo elemento fino all'ultimo {"ca
 > Ogni elemento deve essere dello **stesso tipo**, e gli indici partono da 0 :ok_hand:. Questo vale per entrambe le strutture
 
 ## Iterazioni e cicli
+Go ha solo un costrutto ciclico, il ciclo **for**. 
 ```go
-for i, animal := range animals { // Come si usa ultimamente la sintassi del for è un foreach ibrido
+for i, animal := range animals { // Come si usa ultimamente una possibile sintassi del for è un foreach ibrido
     fmt.Println(i, animal) // Stampa l'index dell'elemento e l'elemento, separandoli con uno spazio
 }
+
+for i := 0; i < 10; i++ { // Sintassi del for "classico"
+	sum += i
+}
+
+for ; sum < 1000; { // Si possono lasciare le istruzioni pre e post vuote, in questo caso assomiglia ad un while
+	sum += sum
+}
+// NOTA: in quest'ultimo esempio i ; sono facoltativi
+
+for {} // Loop
+```
+
+## Le condizioni: peculiarità
+Go ci permette di dichiarare **variabili** negli if che sono usate solo all'interno del blocco `if` e dei suoi blocchi `else`
+```go
+if v := math.Pow(x, n); v < lim {
+	return v
+} else {
+	fmt.Printf("%g >= %g\n", v, lim)
+}
+// qui v non è utilizzabile
 ```
 
 ![golang-diagrams-06](./assets/golang-diagrams-06.png)
@@ -99,7 +160,20 @@ L'esempio di codice riportato nell'immagine non compilerebbe perchè `index` è 
 Se non si ha intenzione di usare l'indice dell'elemento all'interno del ciclo va quindi tolta la variabile index.
 :::
 
-## Valori di ritorno multipli
+## Funzioni: peculiarità
+
+### Funzioni differite (defer)
+Una istruzione di defer **postpone** l'esecuzione di una funzione fino a che la funzione al suo fianco ritorna.<br>
+Gli argomenti della chiamata differita sono **valutati immediatamente**, ma la **chiamata** alla funzione **non viene eseguita fino a che** la funzione al suo fianco non ritorna.<br>
+Le chiamate di funzioni differite sono inserite in una **pila**. Quando una funzione ritorna, le sue chiamate differite sono eseguite nell'ordine **last-in-first-out** (LIFO)
+```go
+defer fmt.Print("!")
+defer fmt.Print("world")
+fmt.Print("hello ")
+// "hello world!"
+```
+
+### Valori di ritorno multipli
 In go è possibile far tornare alle funzioni più di un valore:
 ```go
 func f1() (int, string) { // Valore di ritorno multiplo!
@@ -109,6 +183,7 @@ func f1() (int, string) { // Valore di ritorno multiplo!
 numberVar, stringVar := f1()
 // numberVar = 42; stringVar = "42"
 ```
+> Un'altra peculiarità delle funzioni in Go è quella di avere un **receiver**, concetto approfondito nel confronto con la OO tradizionale, più sotto.
 
 ## Hello Golang: esercitazione
 
