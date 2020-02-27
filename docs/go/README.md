@@ -17,7 +17,9 @@ func main() { // La sintassi per la dichiarazione delle funzioni è abbastanza i
 }
 ```
 ::: tip
-Go ha una [tipizzazione forte e statica](https://it.wikipedia.org/wiki/Tipizzazione_forte), significa che il tipo di una **variabile** non può cambiare (ne a [compile-time](https://it.wikipedia.org/wiki/Compile-time), ne a [run-time](https://it.wikipedia.org/wiki/Run-time))
+Go ha una [tipizzazione forte e statica](https://it.wikipedia.org/wiki/Tipizzazione_forte), significa che il tipo di una **variabile** non può cambiare (ne a [compile-time](https://it.wikipedia.org/wiki/Compile-time), ne a [run-time](https://it.wikipedia.org/wiki/Run-time)).<br>
+
+Unica **eccezzione** sono, come vedremo più avanti, le **interfacce vuote** che hanno tipo dinamico!
 :::
 
 ![golang-diagrams-05](./assets/golang-diagrams-05.png)
@@ -57,6 +59,7 @@ Il valore zero è:
 - `0` per tipi **numerici**.
 - `false` per i **boolean**.
 - `""` (stringa vuota) per le **stringhe**.
+- `nil` per i **puntatori**, **slices** ed altri tipi.
 
 ## Le costanti
 Le costanti sono dichiarate come **variabili**, ma con la parola chiave `const`.<br>
@@ -111,6 +114,7 @@ Documentazione degli standard library packages di go [golang.org/pkg](https://go
 Go ci fornisce due tipi di strutture:
 1. Gli **Array**, di lunghezza **fissa**
 2. Gli **Slice**, di lughezza **variabile** (la lunghezza può aumentare o diminuire)
+> Nella pratica, le slice sono molto più comuni degli array.
 ```go
 animals := []string{"dog", "cat"} // Esempio di Slice
 animals = append(animals, "bird") // Aggiunta di un elemento allo Slice
@@ -119,15 +123,35 @@ animals[1] // "cat"
 animals[0:2] // sottosequenza specificando un range {"dog, "cat"}
 animals[:2] // sottosequenza che parte dal primo elemento (equivalente a sopra)
 animals[1:] // sottosequenza che parte dal secondo elemento fino all'ultimo {"cat", "bird"}
+animals[:] // tutto lo slice {"dog", "cat", "bird"}
 // NOTA: l'index finale non è incluso
+
+primes := [6]int{2, 3, 5, 7, 11, 13} // Esempio di array (len fissa a 6)
 ```
 > Ogni elemento deve essere dello **stesso tipo**, e gli indici partono da 0 :ok_hand:. Questo vale per entrambe le strutture
+::: tip
+Quando usiamo gli Slice in realtà stiamo creando 2 strutture dati ed una di queste è un array, usato internamente dallo Slice!<br>
+Lo Slice **punta** agli elementi dell'array, come vedremo più avanti nei **puntatori**.
+:::
 
+![golang-diagrams-15](./assets/golang-diagrams-15.png)
+
+### Lunghezza e capacità
+Una slice ha sia una lunghezza che una capacità.
+- La **lunghezza** di una slice è il numero di elementi che essa contiene.
+- La **capacità** di una slice è il numero di elementi nell'**array sottostante**, contando dal primo elemento nella slice.
+> **Array a lunghezza dinamica** con **make**: [learn more](https://go-tour-ita.appspot.com/moretypes/13)
+
+La lunghezza e la capacità di una slice s possono essere ottenute con le espressioni `len(s)` and `cap(s)`. 
 ## Iterazioni e cicli
 Go ha solo un costrutto ciclico, il ciclo **for**. 
 ```go
 for i, animal := range animals { // Come si usa ultimamente una possibile sintassi del for è un foreach ibrido
     fmt.Println(i, animal) // Stampa l'index dell'elemento e l'elemento, separandoli con uno spazio
+}
+
+for i := range pow { // for con range dove voglio usare solo l'index
+	pow[i] = 1 << uint(i) // == 2**i
 }
 
 for i := 0; i < 10; i++ { // Sintassi del for "classico"
