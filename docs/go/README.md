@@ -59,7 +59,7 @@ Il valore zero è:
 - `0` per tipi **numerici**.
 - `false` per i **boolean**.
 - `""` (stringa vuota) per le **stringhe**.
-- `nil` per i **puntatori**, **slices** ed altri tipi.
+- `nil` per i **puntatori**, **slices**, **map** ed altri tipi.
 
 ## Le costanti
 Le costanti sono dichiarate come **variabili**, ma con la parola chiave `const`.<br>

@@ -1,4 +1,4 @@
-# Le Structs ed i puntatori
+# Le Structs, i puntatori e le Maps
 
 ## Structs
 
@@ -66,7 +66,7 @@ I puntatori in Go sono un po **differenti** da altri linguaggi come C ad esempio
 Questo evita alcune **problematiche** legate ai puntatori come ad esempio andare a puntare aree di memoria che non dovrebbero essere accessibili (sotto questo aspetto i puntatori di Go sono simili alle reference di C)
 
 Riprendendo il codice visto sopra per ottenere una **modifica effettiva** da parte della funzione `rename()` possiamo usare i puntatori:
-```go
+```go{4,11}
 ...
 	bobPointer := &bob // Conservo l'indirizzo che punta alla variabile 'bob'
 	bobPointer.rename("Big B")
@@ -85,8 +85,6 @@ func (pp *person) rename(newFirstName string) { // Il receiver vuole un indirizz
 - L'operatore `&` genera un **puntatore** verso il suo operando. 
 - L'operatore `*` denota il **valore** sottostante al puntatore. Questo è conosciuto come "**dereferenziazione**" o "**indirecting**".
 
-> A volte (come ad esempio per accedere ad un campo di una struttura) la **dereferenziazione esplicita** con `*` non è necessaria, come visto nello snippet sopra.
-
 ![golang-diagrams-14](../assets/golang-diagrams-14.png)
 
 ::: warning
@@ -94,7 +92,9 @@ Quando però **specifico il tipo** di una variabile (in una dichiarazione, come 
 :::
 
 ### Shortcut
-Come visto nello snippet di codice sopra Go converte **automaticamente** un valore in un puntatore a quel valore se lo ritiene necessario.
+> Come visto nello snippet di codice sopra Go converte **automaticamente** un valore in un puntatore a quel valore se lo ritiene necessario.
+
+> A volte (come ad esempio per accedere ad un campo di una struttura) la **dereferenziazione esplicita** con `*` non è necessaria, come visto nello snippet sopra.
 
 ### Gotchas dei puntatori in Go
 **Gotcha** = caratteristica peculiare del linguaggio, ovvero un comportamento che **differisce** da quello che ci si aspetterebbe.<br>
@@ -128,3 +128,55 @@ Provando a passare una variabile di tipo Slice o che estende il tipo Slice (come
 Questo perchè la copia dello Slice **copia anche il puntatore** all'array ed esso punta allo **stesso array** (o più precisamente all'inizio dell'array)
 
 ![golang-diagrams-16](../assets/golang-diagrams-16.png)
+
+## Maps
+Le Map di Go hanno la struttura **chiave : valore**, come molte altre strutture di molti altri linguaggi:
+- Gli **Hash** di Ruby
+- Gli oggetti di Javascript
+- Le **Dict** di Python
+- Le **Dictionary** di C#
+- Ecc...
+
+Come gli **Array** e gli **Slice** le **Map** supportano l'**indexing**, ovvero gli elementi sono indicizzati, questo è vantagioso per **selezionare** rapidamente un elemento o per **iterare** sugli elementi.
+> Nelle map di Go ogni Key deve avere lo **stesso tipo**, e lo stesso discorso vale per i Value
+
+![golang-diagrams-18](../assets/golang-diagrams-18.png)
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	// METODO 1
+	colors1 := map[string]string{ // Dichiaro ed inizializzo una map con le keys di tipo string e i values di tipo string
+		"red":   "#ff0",
+		"green": "0f0",
+	}
+	// METODO 2 (se si aggiunge un campo va in errore)
+	var colors2 map[int]string // Dichiaro una map vuota
+	// METODO 3
+	colors3 := make(map[string]string)
+
+	red := colors1["red"] // Recupero il valore dell'elemento con indice "red"
+	elem, ok := colors1["black"] // Testo se una chiave è presente con una assegnamento a due valori
+	// NOTA: se key è nella map ok vale true, false altrimenti (in questo caso ok = false)
+
+	fmt.Println(colors1) // map[green:0f0 red:#ff0]
+	fmt.Println(colors2) // map[]
+	fmt.Println(colors3) // map[]
+
+	colors2[42] = "#424242"   // panic: assignment to entry in nil map
+	colors3["black"] = "#000" // Inserimento/aggiunta di un campo
+
+	delete(colors1, "red") // Rimozione di un campo
+}
+```
+### Scorrere le map (iterando)
+```go
+func printMap(m map[string]string) { // Come parametro mi aspetto una map con keys e values di tipo string
+	for key, value := range m { // Ciclo uguale a quello di uno Slice, solo che key non è sempre un int
+		fmt.Println(key + ": " + value)
+	}
+}
+```

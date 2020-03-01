@@ -36,7 +36,7 @@ function getGoSidebar (groupA) {
       sidebarDepth: 2,
       children: [
         '',
-        './structs-pointers/'
+        './structs-pointers-maps/'
       ]
     }
   ]
