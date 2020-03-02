@@ -36,7 +36,8 @@ function getGoSidebar (groupA) {
       sidebarDepth: 2,
       children: [
         '',
-        './structs-pointers-maps/'
+        './structs-pointers-maps/',
+        './interfaces/'
       ]
     }
   ]

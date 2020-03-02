@@ -1,7 +1,9 @@
 # Hello Golang
 ::: warning
 I seguenti sono semplici appunti e non una soluzione completa di risorse, nella home sono presenti vari **approfondimenti**.<br>
-Consiglio di guardare soprattutto il [Tour](https://tour.golang.org) di Go e successivamente [Golang effective_go](https://golang.org/doc/effective_go.html) e [gobyexample](http://gobyexample.com) per approfondire!
+Consiglio di guardare soprattutto il [Tour](https://tour.golang.org) di Go e successivamente [Golang effective_go](https://golang.org/doc/effective_go.html) e [gobyexample](http://gobyexample.com) per approfondire!<br>
+
+Infine: per imparare a ragionare nel migliore dei modi consiglio anche di guardare i codici sorgenti dei metodi più importanti nelle documentazione
 :::
 Eseguiamo il nostro primo programma:
 ```go
@@ -207,7 +209,7 @@ func f1() (int, string) { // Valore di ritorno multiplo!
 numberVar, stringVar := f1()
 // numberVar = 42; stringVar = "42"
 ```
-> Un'altra peculiarità delle funzioni in Go è quella di avere un **receiver**, concetto approfondito nel confronto con la OO tradizionale, più sotto.
+> Un'altra peculiarità delle funzioni in Go è quella di avere un **receiver** (o ricevitore), concetto approfondito nel confronto con la OO tradizionale, più sotto.
 
 ## Hello Golang: esercitazione
 
@@ -223,8 +225,12 @@ Per avere un idea più chiara di alcune differenze prendiamo come esempio l'eser
 ![golang-diagrams-07](./assets/golang-diagrams-07.png)
 
 ### Tipi estesi e receiver
-In go si può **estendere** un tipo base aggiungendo delle funzionalità, questo avviene definendo delle funzioni con un `receiver` del tipo esteso.
+In go si può **estendere** un tipo base (o anche una struct, che vedremo più avanti) aggiungendo delle funzionalità, questo avviene definendo delle funzioni con un `receiver` del tipo esteso (le funzioni con receiver prendono il nome di **metodi**).
 Una funzione con un receiver appartiene ad un **istanza** del tipo del receiver. (vaga somiglianza con l'approccio OO tradizionale)
+
+::: tip
+Non si può dichiarare un metodo con un ricettore il cui tipo è definito in un altro package (il che include anche tipi nativi come int)
+:::
 
 ![golang-diagrams-08](./assets/golang-diagrams-08.png)
 

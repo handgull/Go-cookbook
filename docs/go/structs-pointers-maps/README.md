@@ -81,6 +81,11 @@ func (pp *person) rename(newFirstName string) { // Il receiver vuole un indirizz
 }
 ```
 
+::: tip
+La modifica effettiva dei dati in una funzione non è il solo motivo che può spingerci ad usare i puntatori:<br>
+con i puntatori si **evita di copiare** il valore per ogni chiamata al metodo. Questo può essere più **efficiente** se la struttura puntata ha grandi dimensioni.
+:::
+
 ### Chiarezza su * e &
 - L'operatore `&` genera un **puntatore** verso il suo operando. 
 - L'operatore `*` denota il **valore** sottostante al puntatore. Questo è conosciuto come "**dereferenziazione**" o "**indirecting**".
@@ -92,7 +97,7 @@ Quando però **specifico il tipo** di una variabile (in una dichiarazione, come 
 :::
 
 ### Shortcut
-> Come visto nello snippet di codice sopra Go converte **automaticamente** un valore in un puntatore a quel valore se lo ritiene necessario.
+Le funzioni con un **argomento** puntatore devono usare un **puntatore**, mentre metodi con **ricettori** puntatori possono usare **sia una valore che un puntatore**!
 
 > A volte (come ad esempio per accedere ad un campo di una struttura) la **dereferenziazione esplicita** con `*` non è necessaria, come visto nello snippet sopra.
 
@@ -178,5 +183,52 @@ func printMap(m map[string]string) { // Come parametro mi aspetto una map con ke
 	for key, value := range m { // Ciclo uguale a quello di uno Slice, solo che key non è sempre un int
 		fmt.Println(key + ": " + value)
 	}
+}
+```
+
+## Funzioni anonime e funzioni Closures
+Le funzioni sono anche valori. Esse possono essere passate da una funzione all'altra come altri valori.<br>
+
+Le **funzioni anonime** possono anche essere usate come argomenti in una funzione e ritornare valori.<br>
+
+Le funzioni Go possono essere **closures**. Una closure è un valore **funzione che referenzia variabili al di fuori del suo corpo**. La funzione può accedere e assegnare le variabili referenziate; in questo senso la funzione è "**legata**" alle variabili.
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func compute(fn func(float64, float64) float64) float64 { // Mi aspetto come parametro una funzione che vuole 2 float e ritorna un float
+	return fn(2, 4)
+}
+
+func adder() func(int) int { // Esempio di funzione Closure
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
+func main() {
+	// FUNZIONI ANONIME
+	hypot := func(x, y float64) float64 { // Esempio di funzione anonima
+		return math.Sqrt(x*x + y*y)
+	}
+	fmt.Println(hypot(5, 12))      // 13
+	fmt.Println(compute(hypot))    // 4.47213595499958
+	fmt.Println(compute(math.Pow)) // 16
+	// FUNZIONI CLOSURES
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ { // Ad ogni esecuzione chiamo adder dentro a pos e neg tenendo salvato lo stato della variabile sum
+		fmt.Println(
+			pos(i), // sum += i
+			neg(-2*i),
+		)
+	}
+
+	fmt.Println(neg(0)) // -90
 }
 ```
