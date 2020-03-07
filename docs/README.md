@@ -11,10 +11,12 @@ features:
 ---
 Fonti:<br>
 - [Corso Udemy - Stephen Grider](https://www.udemy.com/course/go-the-complete-developers-guide/)
+- [Golang Tour](https://tour.golang.org)
 - [Is Go object oriented? - flaviocopes](https://flaviocopes.com/golang-is-go-object-oriented/)
 
 Approfondimenti:<br>
-- [Golang Tour](https://tour.golang.org)
 - [Golang effective_go](https://golang.org/doc/effective_go.html)
 - [gobyexample](http://gobyexample.com)
+- [The zen of Go](https://dave.cheney.net/2020/02/23/the-zen-of-go)
 - [The pros and cons of programming in Go - willowtree](https://willowtreeapps.com/ideas/the-pros-and-cons-of-programming-in-go)
+- [Pattern Flyweight implementazione in Go](https://link.medium.com/5JmX0nFeD4)

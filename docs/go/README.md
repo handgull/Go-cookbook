@@ -144,7 +144,47 @@ Una slice ha sia una lunghezza che una capacità.
 - La **capacità** di una slice è il numero di elementi nell'**array sottostante**, contando dal primo elemento nella slice.
 > **Array a lunghezza dinamica** con **make**: [learn more](https://go-tour-ita.appspot.com/moretypes/13)
 
-La lunghezza e la capacità di una slice s possono essere ottenute con le espressioni `len(s)` and `cap(s)`. 
+La lunghezza e la capacità di una slice s possono essere ottenute con le espressioni `len(s)` and `cap(s)`.<br>
+
+**Attenzione alla capacità!**
+```go
+package main
+
+import "fmt"
+
+func esempio1() {
+	var a []int
+
+	a = append(a, 1,2,3)
+	
+	// a, b si riferiscono al medesimo array
+	b := append(a, 4)
+	b[0] = 99
+
+	fmt.Println("a: ", a) // [99 2 3]
+	fmt.Println("b: ", b) // [99 2 3 4]
+}
+
+func esempio2() {
+	var a []int
+
+	a = append(a, 1,2,3,4)
+
+	// non c'è abbastanza capacità, scatta una riallocazione interna 
+	// e di conseguenza b punta ad un nuovo array
+	b := append(a, 5)
+	b[0] = 99
+
+	fmt.Println("a: ", a) // [1 2 3 4]
+	fmt.Println("b: ", b) // [99 2 3 4 5]
+}
+
+func main() {
+	esempio1()
+	esempio2()
+}
+```
+
 ## Iterazioni e cicli
 Go ha solo un costrutto ciclico, il ciclo **for**. 
 ```go
@@ -169,7 +209,7 @@ for {} // Loop
 ```
 
 ## Le condizioni: peculiarità
-Go ci permette di dichiarare **variabili** negli if che sono usate solo all'interno del blocco `if` e dei suoi blocchi `else`
+Go ci permette di dichiarare **variabili** negli if che sono usate solo all'interno del blocco `if` e dei suoi blocchi `else`<br>
 ```go
 if v := math.Pow(x, n); v < lim {
 	return v
@@ -177,6 +217,18 @@ if v := math.Pow(x, n); v < lim {
 	fmt.Printf("%g >= %g\n", v, lim)
 }
 // qui v non è utilizzabile
+```
+Un'altra cosa utile e degna di nota è che i `case` degli gli `switch` accettano condizioni!
+```go
+// Esempio di switch su tipo
+switch v := i.(type) {
+case int:
+	fmt.Printf("Twice %v is %v\n", v, v*2)
+case string:
+	fmt.Printf("%q is %v bytes long\n", v, len(v))
+default:
+	fmt.Printf("I don't know about type %T!\n", v)
+}
 ```
 
 ![golang-diagrams-06](./assets/golang-diagrams-06.png)
@@ -212,7 +264,6 @@ numberVar, stringVar := f1()
 > Un'altra peculiarità delle funzioni in Go è quella di avere un **receiver** (o ricevitore), concetto approfondito nel confronto con la OO tradizionale, più sotto.
 
 ## Hello Golang: esercitazione
-
 [GO!](./exercise-cards.md)
 
 ## OO tradizionale vs Go
