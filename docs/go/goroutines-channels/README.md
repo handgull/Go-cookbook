@@ -1,5 +1,5 @@
 # Goroutines e Channels
-Cosa possono offrirci questi strumenti? partiamo da un esempio diretto:<br>
+Una goroutine è un thread leggero gestito dal runtime di Go. Cosa possono offrirci questi strumenti? partiamo da un esempio diretto:<br>
 Vogliamo controllare lo stato di n siti (se sono raggiungibili). Senza goroutines questo viene fatto con una certa **sequenzialità**, ovvero **bisogna attendere** la risposta di ogni sito prima di testare il sito successivo.
 
 ![golang-diagrams-21](../assets/golang-diagrams-21.png)
@@ -49,7 +49,7 @@ func main() {
 
 func timeTrack(start time.Time, name string) {
 	elapsed := time.Since(start)
-	log.Printf("%s took %dms", name, elapsed.Nanoseconds()/1000)
+	log.Printf("%s took %dms", name, elapsed.Nanoseconds()/1000000)
 }
 
 func sequentialCheck(links []string) {
@@ -93,6 +93,81 @@ func concurrentCheckLink(link string, c chan string) {
 ```
 
 ![golang-screenshots-02](../assets/golang-screenshots-02.png)
+
+### Close e Range su channel
+Il mittente può chiudere (close) un canale per indicare che **non verranno più inviati valori**. Il destinatario può **testare** se un canale è stato chiuso assegnando un **secondo parametro** all'espressione di ricezione:
+```go
+v, ok := <-ch // ok vale false se il canale è chiuso
+
+// Loop che crea una nuova routine appena viene inviato qualcosa nel canale fino ad una eventuale close
+for l := range c { // dove c è un channel
+    // Un modo furbo per mettere la child routine in pausa 5 secondi senza bloccare anche la main routine (e non modificare la funzione con la logica)
+    go func(link string) { // Function literal o funzione anonima
+        time.Sleep(5 * time.Second)
+        concurrentCheckLink(link, c)
+    }(l) // Passo l come istanza di link alla function literal
+}
+
+close(c) // Chiusura di un channel
+```
+::: tip
+Le function literals sono le **funzioni anonime** di Go, una funzione anonima può essere anch'essa essere **valutata** all'interno di una **child routine** (ovvero posso anteporre `go` ad una function literal).
+:::
+
+### Channels buffered
+Dando ad un canale un **buffer** noi possiamo avere una **coda** di dimensione n, finchè la coda non è piena le goroutines **possono terminare anche se il valore non è ancora stato letto**, in caso contrario la lettura del canale diventa **bloccante**.
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+const buffer = 5
+
+// alcuni ANSI colors
+const (
+	infoColor    = "\033[1;34m%s\033[0m"
+	noticeColor  = "\033[1;36m%s\033[0m"
+	warningColor = "\033[1;33m%s\033[0m"
+	errorColor   = "\033[1;31m%s\033[0m"
+	debugColor   = "\033[0;36m%s\033[0m"
+)
+
+func main() {
+	cb := make(chan int64, buffer) // Il channel ha un buffer, ovvero una coda di valori, così anche se non ho ancora letto il valore la routine può terminare
+	ch := make(chan int64)
+
+	for i := 0; i < buffer; i++ {
+		go func(index int) {
+			fmt.Printf(warningColor, "Buffered\n")
+			sendTime(cb)
+			fmt.Printf(warningColor, "~Buffered\n") // Questo viene stampato quando la goroutine termina
+		}(i)
+	}
+
+	for i := 0; i < buffer; i++ {
+		go func(index int) {
+			fmt.Printf(noticeColor, "Unbuffered\n")
+			sendTime(ch)
+			fmt.Printf(noticeColor, "~Unbuffered\n")
+		}(i)
+	}
+
+	for i := 0; i < buffer; i++ {
+		time.Sleep(time.Duration(i+1) * time.Second) // Sleep per non leggere subito ciò che mi arriva nei canali (se no non si vedrebbe una differenza tra i channel)
+		fmt.Println("Buffered RICEZIONE Timestamp inizializzazione:", <-cb, "Timestamp attuale:", time.Now().Unix())
+		fmt.Println("Unbuffered RICEZIONE Timestamp inizializzazione:", <-ch, "Timestamp attuale:", time.Now().Unix())
+	}
+}
+
+func sendTime(c chan int64) {
+	c <- time.Now().Unix()
+}
+```
+
+![golang-screenshots-04](../assets/golang-screenshots-04.png)
 
 ## Goroutines e Channels: esercitazione
 [GO!](./exercise-factorial.md)

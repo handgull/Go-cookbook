@@ -34,7 +34,8 @@ func timeTrack(start time.Time, name string) {
 
 func main() {
 	const value int = 1000000
-	fmt.Println("Il numero di partenza è: ", value)
+    fmt.Println("Il numero di partenza è: ", value)
+    fmt.Println("Il numero dei blocchi di calcolo (chunks) è: ", chunkAmount)
 	chunks := createChunks(value)
 	iterativeResult := iterativeFactorial(chunks)
 	concurrentResult := concurrentFactorial(chunks)

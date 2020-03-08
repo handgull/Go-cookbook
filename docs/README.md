@@ -10,7 +10,7 @@ features:
   details: Un linguaggio open source creato da google. Ha un ottima gestione della concorrenza, un innovativo approccio alla OOP (ad esempio non vi è l'ereditarietà, solo la composizione) ed è stato usato per creare applicazioni come Docker e K8s.
 ---
 Fonti:<br>
-- [Corso Udemy - Stephen Grider](https://www.udemy.com/course/go-the-complete-developers-guide/)
+- [Corso Udemy - Stephen Grider](https://www.udemy.com/course/go-the-complete-developers-guide/) - [`Certificato`](/assets/UC-9e1682e5-4244-4cf8-b4fa-cc8a8189a54f.pdf)
 - [Golang Tour](https://tour.golang.org)
 - [Is Go object oriented? - flaviocopes](https://flaviocopes.com/golang-is-go-object-oriented/)
 
