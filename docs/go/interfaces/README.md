@@ -80,3 +80,6 @@ func main() {
 	fmt.Println(f)
 }
 ```
+::: warning
+Consiglio di fare il Tour e fare in particolare gli esercizi riguardo le interfacce **Stringer**, **error**, **Reader** ed **Image**
+:::

@@ -37,7 +37,8 @@ function getGoSidebar (groupA) {
       children: [
         '',
         './structs-pointers-maps/',
-        './interfaces/'
+        './interfaces/',
+        './goroutines-channels/'
       ]
     }
   ]
