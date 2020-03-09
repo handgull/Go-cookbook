@@ -21,6 +21,7 @@ La Main routine **non si cura di aspettare** che le sue child routines siano fin
 
 ![golang-diagrams-24](../assets/golang-diagrams-24.png)
 
+> Guarda anche [Select](https://go-tour-ita.appspot.com/concurrency/5)
 ```go
 package main
 
@@ -115,7 +116,8 @@ Le function literals sono le **funzioni anonime** di Go, una funzione anonima pu
 :::
 
 ### Channels buffered
-Dando ad un canale un **buffer** noi possiamo avere una **coda** di dimensione n, finchè la coda non è piena le goroutines **possono terminare anche se il valore non è ancora stato letto**, in caso contrario la lettura del canale diventa **bloccante**.
+Dando ad un canale un **buffer** noi possiamo avere una **coda** di dimensione n, finchè la coda non è piena le goroutines **possono terminare anche se il valore non è ancora stato letto** (se non hanno nient'altro da fare), in caso contrario la lettura del canale diventa **bloccante**.<br>
+Di default la comunicazione sui channcels è sincronizzata; quando invii qualche valore ci deve essere un ricevitore. Altrimenti si verificherà un `fatal error: all goroutines are asleep - deadlock!`, con i canali se il buffer non è pieno questo non avviene!
 ```go
 package main
 
@@ -171,3 +173,12 @@ func sendTime(c chan int64) {
 
 ## Goroutines e Channels: esercitazione
 [GO!](./exercise-factorial.md)
+
+## Mutex: mutua esclusione
+Grazie a `sync.Mutex` solo una goroutine per volta può accedere a una variabile **senza conflitti**, questo concetto è detto "di mutua esclusione".<br>
+
+[Mutex](https://go-tour-ita.appspot.com/concurrency/9) opera tramite 2 metodi:
+```go
+Lock
+Unlock
+```
