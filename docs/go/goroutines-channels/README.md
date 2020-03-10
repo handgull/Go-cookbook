@@ -14,6 +14,15 @@ Fin ora abbiamo usato le goroutines senza saperlo, l'esecuzione di un programma 
 
 ![golang-diagrams-23](../assets/golang-diagrams-23.png)
 
+::: tip
+È possibile dare un limite al numero di core utilizzabili dalle goroutines tramite l'istruzione `runtime.GOMAXPROCS(N)`
+:::
+```go
+func main() {
+	runtime.GOMAXPROCS(4) // Verranno usati massimo 4 core
+}
+```
+
 ## Channels
 La Main routine **non si cura di aspettare** che le sue child routines siano finite per terminare, per questo entrano in gioco i **channels**, che sono l'unico modo che le goroutines hanno per **comunicare**.<br>
 
